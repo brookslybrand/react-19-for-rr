@@ -1,20 +1,68 @@
-# Welcome to React Router!
+# What React 19 means for React Router
 
-A modern, production-ready template for building full-stack React applications using React Router.
+This repository serves as a playground for my Epic Web Conf talk exploring the relationship between React 19 and React Router.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Talk Overview
 
-## Features
+Now that React 19 is officially stable, what does that mean for React Router?
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+The introduction of Remix, a web standards-based framework built on React Router, pushed the React ecosystem forward and helped make server-side rendering, forms, and #useThePlatform cool again.
 
-## Getting Started
+Not long after, React began sharing plans to introduce an API for creating composable server-client React applications, a.k.a React Server Components. Now, four years later, all Remix features have been fully merged into React Router, React 19 is out, and the future is bright.
+
+In this talk, Brooks will walk through the history and evolution of React Router. He will highlight how RSC and many other new features of React 19 make React Router even better. React Router has new tools, but the same goal: to help you build better websites and make the web epic.
+
+## Playground Structure
+
+This repository contains examples and demonstrations that showcase:
+
+- The evolution of React Router
+- How React 19 features integrate with React Router
+- Practical implementations of React Server Components with React Router
+- Performance comparisons and optimization techniques
+
+_Note: This structure will evolve as the talk preparation progresses_
+
+## Talk Structure
+
+### Actions Example
+
+- Demo of async transitions with `useTransition` for handling pending states
+- Example of form handling with `useActionState` and `<form action={actionFunction}>`
+- Implementation of optimistic UI updates with `useOptimistic`
+- Showcase of `useFormStatus` for design system components
+- TODO: Create before/after code samples showing simplified data mutation patterns
+
+### Use API Example
+
+- Demo of the new `use` API for reading resources in render
+- Example showing conditional context consumption with `use`
+- Comparison with previous approaches (useContext, etc.)
+- TODO: Build sample implementation showing practical use cases with React Router
+
+### Document Metadata Example
+
+- Demo showing removal of `links` and `meta` exports
+- Implementation of new metadata patterns in React Router
+- TODO: Create before/after code samples
+
+### Hydration Improvements Example
+
+- Demo of React 19's improved hydration warnings
+- Example showing recovery from 3rd party extension conflicts
+- TODO: Create reproducible hydration issue examples
+
+### Custom Elements Example
+
+- Demo integrating Web Components with React Router
+- TODO: Build sample implementation with performance metrics
+
+### Other
+
+- RSC/server actions
+- `prerender`
+
+## Technical Setup
 
 ### Installation
 
@@ -34,7 +82,7 @@ npm run dev
 
 Your application will be available at `http://localhost:5173`.
 
-## Building for Production
+### Building for Production
 
 Create a production build:
 
@@ -42,59 +90,8 @@ Create a production build:
 npm run build
 ```
 
-## Deployment
+## Resources
 
-### Docker Deployment
-
-This template includes three Dockerfiles optimized for different package managers:
-
-- `Dockerfile` - for npm
-- `Dockerfile.pnpm` - for pnpm
-- `Dockerfile.bun` - for bun
-
-To build and run using Docker:
-
-```bash
-# For npm
-docker build -t my-app .
-
-# For pnpm
-docker build -f Dockerfile.pnpm -t my-app .
-
-# For bun
-docker build -f Dockerfile.bun -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+- [React 19 Documentation](https://react.dev/)
+- [React Router Documentation](https://reactrouter.com/)
+- [Epic Web Conf](https://epicweb.dev/conf)
