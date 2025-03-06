@@ -2,6 +2,15 @@
 
 This repository serves as a playground for my Epic Web Conf talk exploring the relationship between React 19 and React Router.
 
+## Repository Structure
+
+This is a monorepo containing two applications:
+
+- `react-18/` - Implementation using React 18 and React Router
+- `react-19/` - Implementation using React 19 and React Router
+
+Each application demonstrates the same features but highlights the differences in implementation between React versions.
+
 ## Talk Overview
 
 Now that React 19 is officially stable, what does that mean for React Router?
@@ -14,53 +23,76 @@ In this talk, Brooks will walk through the history and evolution of React Router
 
 ## Playground Structure
 
-This repository contains examples and demonstrations that showcase:
+This repository contains a fake ecommerce store in two versions (React 18 and React 19) that showcases how React 19 features integrate with React Router. The store includes:
 
-- The evolution of React Router
-- How React 19 features integrate with React Router
-- Practical implementations of React Server Components with React Router
-- Performance comparisons and optimization techniques
+- Product listing and details pages
+- Shopping cart with form actions
+- User reviews system with deferred loading
+- Blog section with isolated stylesheets
+- Light/dark mode theme toggle
+- Custom elements integration
 
-_Note: This structure will evolve as the talk preparation progresses_
+Each feature is designed to demonstrate specific React 19 capabilities and how they enhance React Router applications.
 
 ## Talk Structure
 
-### Actions Example
+### Actions Example (Shopping Cart)
 
+**Before React 19:** Uses `useForm`.
+
+**After React 19:**
+
+- Implementation of cart functionality using React 19's Actions API
 - Demo of async transitions with `useTransition` for handling pending states
 - Example of form handling with `useActionState` and `<form action={actionFunction}>`
-- Implementation of optimistic UI updates with `useOptimistic`
-- Showcase of `useFormStatus` for design system components
-- TODO: Create before/after code samples showing simplified data mutation patterns
+- Implementation of optimistic UI updates with `useOptimistic` when adding/removing items
+- Showcase of `useFormStatus` for loading states in cart buttons
 
-### Use API Example
+### `use` API Example (Product Details & Reviews)
 
+**Before React 19:** Leverages `Async` and `Suspense` to defer loading of reviews section.
+
+**After React 19:**
+
+- Product details page with deferred loading of reviews section
 - Demo of the new `use` API for reading resources in render
-- Example showing conditional context consumption with `use`
-- Comparison with previous approaches (useContext, etc.)
-- TODO: Build sample implementation showing practical use cases with React Router
+- Implementation of conditional data fetching with `use`
+- Comparison with previous approaches (useEffect, useContext, etc.)
 
-### Document Metadata Example
+### Document Metadata Example (Blog)
 
-- Demo showing removal of `links` and `meta` exports
+**Before React 19:** Reliance on `links` and `meta` exports to add metadata to the document.
+
+**After React 19:**
+
+- Blog section using the `link` component and `preload` to isolate stylesheets
 - Implementation of new metadata patterns in React Router
-- TODO: Create before/after code samples
+- Demo showing removal of `links` and `meta` exports
 
-### Hydration Improvements Example
+### Hydration Improvements Example (Theme Toggle)
 
+**Before React 19:** Poor hydration mismatch messages and hydration errors when third-party extensions modify the DOM, requiring complex workarounds.
+
+**After React 19:**
+
+- Light/dark mode implementation showcasing React 19's improved hydration
 - Demo of React 19's improved hydration warnings
-- Example showing recovery from 3rd party extension conflicts
-- TODO: Create reproducible hydration issue examples
+- Example showing recovery from theme preference conflicts
+- Demonstration of React 19's ability to handle third-party scripts and browser extensions
 
 ### Custom Elements Example
 
-- Demo integrating Web Components with React Router
-- TODO: Build sample implementation with performance metrics
+**Before React 19:** Challenges integrating Web Components with React's rendering lifecycle and event system.
+
+**After React 19:**
+
+- Product image gallery using Web Components for enhanced image viewing
+- Integration of custom elements with React Router navigation
 
 ### Other
 
-- RSC/server actions
-- `prerender`
+- RSC/server actions integration
+- `prerender` optimization for static pages
 
 ## Technical Setup
 
@@ -69,25 +101,39 @@ _Note: This structure will evolve as the talk preparation progresses_
 Install the dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Development
 
-Start the development server with HMR:
+Start the development server for React 18 version:
 
 ```bash
-npm run dev
+pnpm --filter react-18 dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+Start the development server for React 19 version:
+
+```bash
+pnpm --filter react-19 dev
+```
+
+Your applications will be available at:
+
+- React 18: `http://localhost:5173`
+- React 19: `http://localhost:5174`
 
 ### Building for Production
 
-Create a production build:
+Create production builds:
 
 ```bash
-npm run build
+# Build all packages
+pnpm build
+
+# Build specific package
+pnpm --filter react-18 build
+pnpm --filter react-19 build
 ```
 
 ## Resources

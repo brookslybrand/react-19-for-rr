@@ -1,0 +1,5 @@
+packages:
+  - react-18
+  - react-19
+onlyBuiltDependencies:
+  - esbuild
