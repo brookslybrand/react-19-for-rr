@@ -11,27 +11,39 @@ const baseData: Omit<Database, keyof DatabaseMethods> = {
   products: [
     {
       id: "1",
-      name: "Mechanical Keyboard",
-      description: "A premium mechanical keyboard with RGB lighting",
-      price: 149.99,
-      image: "https://picsum.photos/seed/keyboard/400/300",
-      category: "electronics",
+      name: "Load in Parallel T-shirt",
+      description: "Heavyweight, relaxed fit. Screenprinted graphic on chest",
+      price: 29.99,
+      images: [
+        "/assets/T-Shirt - Load in Parallel - Black.png",
+        "/assets/T-Shirt - Load in Parallel - Back - Black.png",
+      ],
+      category: "apparel",
     },
     {
       id: "2",
-      name: "Ergonomic Mouse",
-      description: "Wireless ergonomic mouse for all-day comfort",
-      price: 79.99,
-      image: "https://picsum.photos/seed/mouse/400/300",
-      category: "electronics",
+      name: "Remix Engineering Hoodie",
+      description:
+        "Premium heavyweight, oversized fit. Screenprinted graphics on chest, sleeves, and back. No drawcord for a cleaner, modern look",
+      price: 59.99,
+      images: [
+        "/assets/Hoodie - Remix Engineering - Front.png",
+        "/assets/Hoodie - Remix Engineering - Back.png",
+        "/assets/Hoodie - Remix Engineering - Side.png",
+      ],
+      category: "apparel",
     },
     {
       id: "3",
-      name: "Ultra-wide Monitor",
-      description: '34" curved ultra-wide monitor for productivity',
-      price: 499.99,
-      image: "https://picsum.photos/seed/monitor/400/300",
-      category: "electronics",
+      name: "Remix Sticker Pack",
+      description:
+        "A pack of 6 stickers featuring the Remix and React Router logos.",
+      price: 9.99,
+      images: [
+        "/assets/Remix Sticker Pack No1 - Packaged.png",
+        "/assets/Remix Sticker Pack No1 - Loose.png",
+      ],
+      category: "accessories",
     },
   ],
   reviews: [
@@ -40,7 +52,8 @@ const baseData: Omit<Database, keyof DatabaseMethods> = {
       productId: "1",
       userId: "1",
       rating: 5,
-      comment: "Best keyboard I've ever used!",
+      comment:
+        "Love the design! The parallel lines are so clean and the fabric quality is top notch.",
       date: "2024-03-15",
     },
     {
@@ -48,8 +61,53 @@ const baseData: Omit<Database, keyof DatabaseMethods> = {
       productId: "1",
       userId: "2",
       rating: 4,
-      comment: "Great build quality, a bit loud though",
+      comment: "Great fit and super soft. Wish it came in more colors!",
       date: "2024-03-14",
+    },
+    {
+      id: "3",
+      productId: "2",
+      userId: "3",
+      rating: 5,
+      comment:
+        "This hoodie is incredible. The engineering details on the sleeves are a conversation starter at every meetup.",
+      date: "2024-03-13",
+    },
+    {
+      id: "4",
+      productId: "2",
+      userId: "1",
+      rating: 5,
+      comment:
+        "Perfect weight for coding sessions. The oversized fit is exactly what I was looking for.",
+      date: "2024-03-12",
+    },
+    {
+      id: "5",
+      productId: "2",
+      userId: "2",
+      rating: 4,
+      comment:
+        "Love the minimal design without the drawstrings. Sleeves could be a bit longer but overall great quality.",
+      date: "2024-03-11",
+    },
+    {
+      id: "6",
+      productId: "3",
+      userId: "3",
+      rating: 5,
+      comment:
+        "These stickers are awesome! The holographic effect on some of them is a nice touch.",
+      date: "2024-03-10",
+    },
+    {
+      id: "7",
+      productId: "3",
+      userId: "1",
+      rating: 5,
+      comment:
+        "High quality stickers that actually last. Already decorated my laptop and water bottle.",
+      date: "2024-03-09",
     },
   ],
   cart: [],
@@ -74,15 +132,21 @@ const baseData: Omit<Database, keyof DatabaseMethods> = {
   users: [
     {
       id: "1",
-      name: "John Doe",
-      email: "john@example.com",
+      name: "Michael Jackson",
+      email: "michael@shopify.com",
       themePreference: "light" as const,
     },
     {
       id: "2",
-      name: "Jane Smith",
-      email: "jane@example.com",
+      name: "Ryan Florence",
+      email: "ryan@shopify.com",
       themePreference: "dark" as const,
+    },
+    {
+      id: "3",
+      name: "Brooks Lybrand",
+      email: "brooks@shopify.com",
+      themePreference: "light" as const,
     },
   ],
 };

@@ -32,7 +32,7 @@ export const unstable_middleware = [dbMiddleware];
 
 export async function loader({ context }: Route.LoaderArgs) {
   const db = getDb(context);
-  const user = await db.getUser("1");
+  const user = await db.getUser("3");
   const cartTotal = await db.getCartTotal();
   return { user, cartTotal };
 }

@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Await, useFetcher } from "react-router";
 import { getDb } from "~/db/data.server";
 import type { Review } from "~/db/schema";
@@ -25,11 +25,7 @@ export default function Product({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-96 object-cover rounded-lg"
-        />
+        <ImageCarousel images={product.images} />
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {product.name}
@@ -71,6 +67,54 @@ export default function Product({ loaderData }: Route.ComponentProps) {
           </Await>
         </Suspense>
       </div>
+    </div>
+  );
+}
+
+function ImageCarousel({ images }: { images: string[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  return (
+    <div className="relative">
+      <img
+        src={images[currentIndex]}
+        alt="Product"
+        className="w-full h-96 object-contain rounded-lg bg-white dark:bg-gray-800"
+      />
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={() =>
+              setCurrentIndex((i) => (i === 0 ? images.length - 1 : i - 1))
+            }
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/75"
+            aria-label="Previous image"
+          >
+            ←
+          </button>
+          <button
+            onClick={() =>
+              setCurrentIndex((i) => (i === images.length - 1 ? 0 : i + 1))
+            }
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/75"
+            aria-label="Next image"
+          >
+            →
+          </button>
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                className={`w-2 h-2 rounded-full ${
+                  idx === currentIndex ? "bg-white" : "bg-white/50"
+                }`}
+                aria-label={`Go to image ${idx + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
