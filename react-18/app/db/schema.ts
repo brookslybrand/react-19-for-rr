@@ -38,10 +38,21 @@ export type User = {
   themePreference: "light" | "dark";
 };
 
+export interface DatabaseMethods {
+  getUser(id: string): Promise<User | undefined>;
+  getProductReviews(productId: string): Promise<Review[]>;
+  getProduct(id: string): Promise<Product | undefined>;
+  getBlogPost(slug: string): Promise<BlogPost | undefined>;
+  addToCart(productId: string): Promise<void>;
+  removeFromCart(productId: string): Promise<void>;
+  getCartWithProducts(): Promise<(CartItem & { product: Product })[]>;
+  getCartTotal(): Promise<number>;
+}
+
 export type Database = {
   products: Product[];
   reviews: Review[];
   cart: CartItem[];
   blogPosts: BlogPost[];
   users: User[];
-};
+} & DatabaseMethods;

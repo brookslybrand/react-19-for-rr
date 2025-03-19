@@ -10,8 +10,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "react-router";
-import { db } from "~/db/data";
-import { dbMiddleware } from "./db/middleware";
+import { dbMiddleware, getDb } from "./db/data.server";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -31,15 +30,18 @@ export const links: Route.LinksFunction = () => [
 
 export const unstable_middleware = [dbMiddleware];
 
-export async function loader() {
-  // In a real app, we'd get the user from a session
-  const user = db.users[0];
-  return { user };
+export async function loader({ context }: Route.LoaderArgs) {
+  const db = getDb(context);
+  const user = await db.getUser("1");
+  const cartTotal = await db.getCartTotal();
+  return { user, cartTotal };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { user } = useLoaderData<typeof loader>();
-  const [theme, setTheme] = useState<"light" | "dark">(user.themePreference);
+  const { user, cartTotal } = useLoaderData<typeof loader>();
+  const [theme, setTheme] = useState<"light" | "dark">(
+    user?.themePreference ?? "light",
+  );
 
   useEffect(() => {
     document.documentElement.classList.remove("light", "dark");
@@ -83,7 +85,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   to={href("/cart")}
                   className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
                 >
-                  Cart ({db.cart.length})
+                  Cart ({cartTotal})
                 </Link>
                 <button
                   onClick={() => setTheme(theme === "light" ? "dark" : "light")}

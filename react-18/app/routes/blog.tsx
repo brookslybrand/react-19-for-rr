@@ -1,5 +1,5 @@
 import { href, Link } from "react-router";
-import { getDb } from "~/db/middleware";
+import { getDb } from "~/db/data.server";
 import type { Route } from "./+types/blog";
 
 export async function loader({ context }: Route.LoaderArgs) {

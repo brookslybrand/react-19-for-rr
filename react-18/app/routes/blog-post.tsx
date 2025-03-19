@@ -1,9 +1,9 @@
 import type { Route } from "./+types/blog-post";
-import { getDb } from "~/db/middleware";
+import { getDb } from "~/db/data.server";
 
 export async function loader({ params, context }: Route.LoaderArgs) {
   const db = getDb(context);
-  const post = db.blogPosts.find((p) => p.slug === params.slug);
+  const post = await db.getBlogPost(params.slug);
   if (!post) {
     throw new Response("Not Found", { status: 404 });
   }

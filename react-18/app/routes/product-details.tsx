@@ -1,20 +1,12 @@
 import { Suspense } from "react";
 import { Await, useFetcher } from "react-router";
-import { db } from "../db/data";
-import type { Route } from "./+types/product-details";
-import { getDb } from "~/db/middleware";
+import { getDb } from "~/db/data.server";
 import type { Review } from "~/db/schema";
-
-// TODO: move this to a method on the DB
-async function getProductReviews(productId: string) {
-  // Simulate slow API call
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return db.reviews.filter((review) => review.productId === productId);
-}
+import type { Route } from "./+types/product-details";
 
 export async function loader({ params, context }: Route.LoaderArgs) {
   const db = getDb(context);
-  const product = db.products.find((p) => p.id === params.id);
+  const product = await db.getProduct(params.id);
 
   if (!product) {
     throw new Response("Not Found", { status: 404 });
@@ -22,7 +14,7 @@ export async function loader({ params, context }: Route.LoaderArgs) {
 
   return {
     product,
-    reviews: getProductReviews(params.id),
+    reviews: db.getProductReviews(params.id),
   };
 }
 

@@ -1,5 +1,5 @@
 import { redirect } from "react-router";
-import { getDb } from "~/db/middleware";
+import { getDb } from "~/db/data.server";
 import type { Route } from "./+types/cart";
 
 export async function action({ request, context }: Route.ActionArgs) {
@@ -13,26 +13,9 @@ export async function action({ request, context }: Route.ActionArgs) {
   }
 
   if (intent === "add") {
-    const product = db.products.find((p) => p.id === productId);
-    if (!product) {
-      throw new Error("Product not found");
-    }
-
-    const existingItem = db.cart.find((item) => item.productId === productId);
-    if (existingItem) {
-      existingItem.quantity++;
-    } else {
-      db.cart.push({
-        id: String(Date.now()),
-        productId,
-        quantity: 1,
-      });
-    }
+    db.addToCart(productId);
   } else if (intent === "remove") {
-    const index = db.cart.findIndex((item) => item.productId === productId);
-    if (index > -1) {
-      db.cart.splice(index, 1);
-    }
+    db.removeFromCart(productId);
   }
 
   return redirect("/cart");
@@ -40,18 +23,15 @@ export async function action({ request, context }: Route.ActionArgs) {
 
 export async function loader({ context }: Route.LoaderArgs) {
   const db = getDb(context);
-  const cartItems = db.cart.map((item) => {
-    const product = db.products.find((p) => p.id === item.productId);
-    if (!product) throw new Error("Product not found");
-    return { ...item, product };
-  });
+  const [cartItems, total] = await Promise.all([
+    db.getCartWithProducts(),
+    db.getCartTotal(),
+  ]);
 
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0,
-  );
-
-  return { cartItems, total };
+  return {
+    cartItems,
+    total,
+  };
 }
 
 export default function Cart({ loaderData }: Route.ComponentProps) {
