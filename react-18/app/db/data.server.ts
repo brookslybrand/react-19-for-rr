@@ -214,6 +214,7 @@ const db: Database = {
         return { ...item, product };
       }),
     );
+
     return items;
   },
 

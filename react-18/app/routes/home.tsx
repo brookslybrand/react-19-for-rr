@@ -1,7 +1,7 @@
 import { href, Link } from "react-router";
 import type { Route } from "./+types/home";
 import { getDb } from "~/db/data.server";
-import { ProductCard } from "~/components/ProductCard";
+import { ProductCard } from "~/components/product-card";
 
 export async function loader({ context }: Route.LoaderArgs) {
   const db = getDb(context);

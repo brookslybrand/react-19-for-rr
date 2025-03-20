@@ -1,5 +1,5 @@
 import { getDb } from "~/db/data.server";
-import { ProductCard } from "~/components/ProductCard";
+import { ProductCard } from "~/components/product-card";
 import type { Route } from "./+types/products";
 
 export async function loader({ context }: Route.LoaderArgs) {
