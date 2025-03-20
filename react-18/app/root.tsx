@@ -13,7 +13,7 @@ import {
 import { dbMiddleware, getDb } from "./db/data.server";
 
 import type { Route } from "./+types/root";
-import "./app.css";
+import "./styles/app.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -96,7 +96,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </nav>
-          <main className="container mx-auto p-4">{children}</main>
+          <main className="container mx-auto px-4 py-8">{children}</main>
         </div>
         <ScrollRestoration />
         <Scripts />

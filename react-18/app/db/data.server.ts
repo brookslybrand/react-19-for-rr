@@ -111,24 +111,6 @@ const baseData: Omit<Database, keyof DatabaseMethods> = {
     },
   ],
   cart: [],
-  blogPosts: [
-    {
-      id: "1",
-      title: "The Future of Web Development",
-      content: "Lorem ipsum dolor sit amet...",
-      date: "2024-03-10",
-      author: "Brooks Lybrand",
-      slug: "future-of-web-development",
-    },
-    {
-      id: "2",
-      title: "Why React Router is Awesome",
-      content: "Lorem ipsum dolor sit amet...",
-      date: "2024-03-12",
-      author: "Brooks Lybrand",
-      slug: "why-react-router-is-awesome",
-    },
-  ],
   users: [
     {
       id: "1",
@@ -171,11 +153,6 @@ const db: Database = {
   async getProduct(id: string) {
     await delay();
     return this.products.find((p) => p.id === id);
-  },
-
-  async getBlogPost(slug: string) {
-    await delay();
-    return this.blogPosts.find((p) => p.slug === slug);
   },
 
   async addToCart(productId: string) {

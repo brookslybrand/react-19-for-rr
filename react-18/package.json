@@ -9,12 +9,16 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@mdx-js/rollup": "^3.1.0",
     "@react-router/node": "^7.3.0",
     "@react-router/serve": "^7.3.0",
     "isbot": "^5.1.25",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router": "^7.3.0"
+    "react-router": "^7.3.0",
+    "rehype-pretty-code": "^0.14.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-mdx-frontmatter": "^5.0.0"
   },
   "devDependencies": {
     "@react-router/dev": "^7.3.0",
