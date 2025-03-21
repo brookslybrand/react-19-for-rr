@@ -116,19 +116,16 @@ const baseData: Omit<Database, keyof DatabaseMethods> = {
       id: "1",
       name: "Michael Jackson",
       email: "michael@shopify.com",
-      themePreference: "light" as const,
     },
     {
       id: "2",
       name: "Ryan Florence",
       email: "ryan@shopify.com",
-      themePreference: "dark" as const,
     },
     {
       id: "3",
       name: "Brooks Lybrand",
       email: "brooks@shopify.com",
-      themePreference: "light" as const,
     },
   ],
 };

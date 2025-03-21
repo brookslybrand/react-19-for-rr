@@ -26,7 +26,6 @@ export type User = {
   id: string;
   name: string;
   email: string;
-  themePreference: "light" | "dark";
 };
 
 export interface DatabaseMethods {

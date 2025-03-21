@@ -18,7 +18,8 @@
     "react-router": "^7.3.0",
     "rehype-pretty-code": "^0.14.1",
     "remark-frontmatter": "^5.0.0",
-    "remark-mdx-frontmatter": "^5.0.0"
+    "remark-mdx-frontmatter": "^5.0.0",
+    "remix-utils": "^8.5.0"
   },
   "devDependencies": {
     "@react-router/dev": "^7.3.0",

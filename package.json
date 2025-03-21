@@ -9,7 +9,10 @@
     "dev:19": "pnpm --filter react-19 run dev",
     "build": "pnpm -r run build",
     "build:18": "pnpm --filter react-18 run build",
-    "build:19": "pnpm --filter react-19 run build"
+    "build:19": "pnpm --filter react-19 run build",
+    "start": "pnpm -r run start",
+    "start:18": "pnpm --filter react-18 run start",
+    "start:19": "pnpm --filter react-19 run start"
   },
   "keywords": [
     "react",

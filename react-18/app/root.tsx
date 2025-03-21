@@ -9,11 +9,14 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useFetcher,
 } from "react-router";
 import { dbMiddleware, getDb } from "./db/data.server";
 
 import type { Route } from "./+types/root";
 import "./styles/app.css";
+import { parseColorScheme } from "color-scheme/cookie.server";
+import { ColorSchemeScript, useColorScheme } from "color-scheme";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -30,27 +33,26 @@ export const links: Route.LinksFunction = () => [
 
 export const unstable_middleware = [dbMiddleware];
 
-export async function loader({ context }: Route.LoaderArgs) {
+export async function loader({ request, context }: Route.LoaderArgs) {
   const db = getDb(context);
-  const user = await db.getUser("3");
-  const cartTotal = await db.getCartTotal();
-  return { user, cartTotal };
+
+  const [user, cartTotal, colorScheme] = await Promise.all([
+    db.getUser("3"),
+    db.getCartTotal(),
+    parseColorScheme(request),
+  ]);
+
+  return { user, cartTotal, colorScheme };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { user, cartTotal } = useLoaderData<typeof loader>();
-  const [theme, setTheme] = useState<"light" | "dark">(
-    user?.themePreference ?? "light",
-  );
-
-  useEffect(() => {
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(theme);
-  }, [theme]);
+  const { cartTotal } = useLoaderData<typeof loader>();
+  let colorScheme = useColorScheme();
 
   return (
-    <html lang="en">
+    <html lang="en" className={colorScheme === "dark" ? "dark" : ""}>
       <head>
+        <ColorSchemeScript />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
@@ -87,12 +89,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 >
                   Cart ({cartTotal})
                 </Link>
-                <button
-                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                  className="p-2 rounded-full bg-gray-200 dark:bg-gray-700"
-                >
-                  {theme === "light" ? "🌙" : "☀️"}
-                </button>
+                <ColorSchemePicker />
               </div>
             </div>
           </nav>
@@ -135,5 +132,59 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         </pre>
       )}
     </main>
+  );
+}
+
+function ColorSchemePicker() {
+  const fetcher = useFetcher();
+  const { colorScheme } = useLoaderData<typeof loader>();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleChange = (value: string) => {
+    fetcher.submit(
+      { colorScheme: value },
+      { method: "post", action: "/resources/color-scheme" },
+    );
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+        aria-label="Toggle color scheme"
+      >
+        {colorScheme === "light" ? "☀️" : colorScheme === "dark" ? "🌙" : "💻"}
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
+          <div className="py-1" role="menu">
+            <button
+              onClick={() => handleChange("light")}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+              role="menuitem"
+            >
+              <span>☀️</span> Light
+            </button>
+            <button
+              onClick={() => handleChange("dark")}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+              role="menuitem"
+            >
+              <span>🌙</span> Dark
+            </button>
+            <button
+              onClick={() => handleChange("system")}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+              role="menuitem"
+            >
+              <span>💻</span> System
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

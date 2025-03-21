@@ -22,8 +22,8 @@ export const getPosts = async (): Promise<PostMeta[]> => {
   const build = await import("virtual:react-router/server-build");
 
   const posts = Object.entries(modules).map(([file, post]) => {
-    let id = file.replace("./", "").replace(/\.mdx$/, "");
-    let slug = build.routes[id].path;
+    const id = file.replace("./", "").replace(/\.mdx$/, "");
+    const slug = build.routes[id].path;
 
     if (slug === undefined) throw new Error(`No route for ${id}`);
 

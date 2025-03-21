@@ -20,4 +20,5 @@ export default [
     ...mdxFiles.map(({ path: routePath, file }) => route(routePath, file)),
   ]),
   route("cart", "routes/cart.tsx"),
+  route("resources/color-scheme", "routes/resources/color-scheme.ts"),
 ] satisfies RouteConfig;
