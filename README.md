@@ -36,38 +36,16 @@ Each feature is designed to demonstrate specific React 19 capabilities and how t
 
 ## Talk Structure
 
-### Actions Example (Shopping Cart)
+### React Compiler
 
-**Before React 19:** Uses `useForm`.
+### Custom Elements Example
 
-**After React 19:**
-
-- Implementation of cart functionality using React 19's Actions API
-- Demo of async transitions with `useTransition` for handling pending states
-- Example of form handling with `useActionState` and `<form action={actionFunction}>`
-- Implementation of optimistic UI updates with `useOptimistic` when adding/removing items
-- Showcase of `useFormStatus` for loading states in cart buttons
-
-### `use` API Example (Product Details & Reviews)
-
-**Before React 19:** Leverages `Async` and `Suspense` to defer loading of reviews section.
+**Before React 19:** Challenges integrating Web Components with React's rendering lifecycle and event system.
 
 **After React 19:**
 
-- Product details page with deferred loading of reviews section
-- Demo of the new `use` API for reading resources in render
-- Implementation of conditional data fetching with `use`
-- Comparison with previous approaches (useEffect, useContext, etc.)
-
-### Document Metadata Example (Blog)
-
-**Before React 19:** Reliance on `links` and `meta` exports to add metadata to the document.
-
-**After React 19:**
-
-- Blog section using the `link` component and `preload` to isolate stylesheets
-- Implementation of new metadata patterns in React Router
-- Demo showing removal of `links` and `meta` exports
+- Product image gallery using Web Components for enhanced image viewing
+- Integration of custom elements with React Router navigation
 
 ### Hydration Improvements Example (Theme Toggle)
 
@@ -80,18 +58,46 @@ Each feature is designed to demonstrate specific React 19 capabilities and how t
 - Example showing recovery from theme preference conflicts
 - Demonstration of React 19's ability to handle third-party scripts and browser extensions
 
-### Custom Elements Example
+### Document Metadata Example (Blog)
 
-**Before React 19:** Challenges integrating Web Components with React's rendering lifecycle and event system.
+**Before React 19:** Reliance on `links` and `meta` exports to add metadata to the document.
 
 **After React 19:**
 
-- Product image gallery using Web Components for enhanced image viewing
-- Integration of custom elements with React Router navigation
+- Blog section using the `link` component and `preload` to isolate stylesheets
+- Implementation of new metadata patterns in React Router
+- Demo showing removal of `links` and `meta` exports
 
-### Other
+### `use` API Example (Product Details & Reviews)
+
+**Before React 19:** Leverages `Async` and `Suspense` to defer loading of reviews section.
+
+**After React 19:**
+
+- Product details page with deferred loading of reviews section
+- Demo of the new `use` API for reading resources in render
+- Implementation of conditional data fetching with `use`
+- Comparison with previous approaches (useEffect, useContext, etc.)
+
+### Actions Example (Shopping Cart)
+
+**Before React 19:** Uses `useForm`.
+
+**After React 19:**
+
+- Implementation of cart functionality using React 19's Actions API
+- Demo of async transitions with `useTransition` for handling pending states
+- Example of form handling with `useActionState` and `<form action={actionFunction}>`
+- Implementation of optimistic UI updates with `useOptimistic` when adding/removing items
+- Showcase of `useFormStatus` for loading states in cart buttons
+
+### Honorable Mentions
 
 - RSC/server actions integration
+- Better Error Reporting
+- cleanup function for refs
+- Context as a provider
+- ref as a prop
 - `prerender` optimization for static pages
 
 ## Technical Setup
