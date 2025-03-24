@@ -15,6 +15,7 @@ import { dbMiddleware, getDb } from "./db/data.server";
 
 import { ColorSchemeScript, useColorScheme } from "color-scheme";
 import { parseColorScheme } from "color-scheme/cookie.server";
+import { preinitModule } from "react-dom";
 import type { Route } from "./+types/root";
 import "./styles/app.css";
 
@@ -44,6 +45,14 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 
   return { user, cartTotal, colorScheme };
 }
+
+export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
+  preinitModule("/color-scheme-picker.js");
+  return await serverLoader();
+}
+
+clientLoader.hydrate = true as const;
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const { cartTotal } = useLoaderData<typeof loader>();
   let colorScheme = useColorScheme();
@@ -173,7 +182,7 @@ function ColorSchemePicker() {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
-      const menu = document.getElementById("color-scheme-menu");
+      const menu = document.querySelector("color-scheme-picker-menu");
 
       if (
         buttonRef.current &&
@@ -203,49 +212,19 @@ function ColorSchemePicker() {
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Toggle color scheme"
-        aria-haspopup="true"
-        aria-expanded={isOpen}
-        aria-controls="color-scheme-menu"
       >
+        <span className="sr-only">Toggle color scheme</span>
         {colorScheme === "light" ? "☀️" : colorScheme === "dark" ? "🌙" : "💻"}
       </button>
 
-      {isOpen && (
-        <div
-          id="color-scheme-menu"
-          className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50"
-          role="menu"
-          aria-label="Color scheme options"
-        >
-          <div className="py-1">
-            <button
-              onClick={() => handleChange("light")}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              role="option"
-              aria-selected={colorScheme === "light"}
-            >
-              <span>☀️</span> Light
-            </button>
-            <button
-              onClick={() => handleChange("dark")}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              role="option"
-              aria-selected={colorScheme === "dark"}
-            >
-              <span>🌙</span> Dark
-            </button>
-            <button
-              onClick={() => handleChange("system")}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              role="option"
-              aria-selected={colorScheme === "system"}
-            >
-              <span>💻</span> System
-            </button>
-          </div>
-        </div>
-      )}
+      {/* @ts-ignore not part of this demo */}
+      <color-scheme-picker-menu
+        open={isOpen}
+        current-scheme={colorScheme}
+        onChange={(e: any) => {
+          handleChange(e.nativeEvent.detail.scheme);
+        }}
+      />
     </div>
   );
 }
