@@ -259,8 +259,7 @@ Debatable if the links one is better, but it's more composable and nice for 3rd 
 
 - Product details page with deferred loading of reviews section
 - Demo of the new `use` API for reading resources in render
-- Implementation of conditional data fetching with `use`
-- Comparison with previous approaches (useEffect, useContext, etc.)
+- Conditional rendering of Suspense fallback based on hydration status
 
 ### Actions Example (Shopping Cart)
 
