@@ -1,6 +1,6 @@
-import type { Route } from "./+types/home";
-import { getDb } from "~/db/data.server";
 import { ProductCard } from "~/components/product-card";
+import { getDb } from "~/db/data.server";
+import type { Route } from "./+types/home";
 
 export const meta: Route.MetaFunction = () => {
   return [

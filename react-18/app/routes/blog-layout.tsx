@@ -1,8 +1,8 @@
 import { Link, Outlet } from "react-router";
 
+import { getPosts } from "~/posts.server";
 import blogCss from "~/styles/blog.css?url";
 import type { Route } from "./+types/blog-layout";
-import { getPosts, type PostMeta } from "~/posts.server";
 
 export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: blogCss },

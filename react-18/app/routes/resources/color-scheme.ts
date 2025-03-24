@@ -1,8 +1,8 @@
-import { data, type ActionFunctionArgs } from "react-router";
 import {
   serializeColorScheme,
   validateColorScheme,
 } from "color-scheme/cookie.server";
+import { data, type ActionFunctionArgs } from "react-router";
 
 export async function action({ request }: ActionFunctionArgs) {
   let formData = await request.formData();

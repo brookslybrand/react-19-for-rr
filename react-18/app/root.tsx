@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   href,
   isRouteErrorResponse,
@@ -8,15 +8,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
   useFetcher,
+  useLoaderData,
 } from "react-router";
 import { dbMiddleware, getDb } from "./db/data.server";
 
+import { ColorSchemeScript, useColorScheme } from "color-scheme";
+import { parseColorScheme } from "color-scheme/cookie.server";
 import type { Route } from "./+types/root";
 import "./styles/app.css";
-import { parseColorScheme } from "color-scheme/cookie.server";
-import { ColorSchemeScript, useColorScheme } from "color-scheme";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

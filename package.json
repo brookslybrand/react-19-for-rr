@@ -12,7 +12,8 @@
     "build:19": "pnpm --filter react-19 run build",
     "start": "pnpm -r run start",
     "start:18": "pnpm --filter react-18 run start",
-    "start:19": "pnpm --filter react-19 run start"
+    "start:19": "pnpm --filter react-19 run start",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "keywords": [
     "react",
@@ -20,5 +21,10 @@
     "react-19"
   ],
   "author": "Brooks Lybrand",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "prettier": "^3.5.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "prettier-plugin-tailwindcss": "^0.6.11"
+  }
 }

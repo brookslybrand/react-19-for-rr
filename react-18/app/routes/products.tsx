@@ -1,5 +1,5 @@
-import { getDb } from "~/db/data.server";
 import { ProductCard } from "~/components/product-card";
+import { getDb } from "~/db/data.server";
 import type { Route } from "./+types/products";
 
 export const meta: Route.MetaFunction = () => {

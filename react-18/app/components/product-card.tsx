@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { useState } from "react";
 import { href, Link } from "react-router";
 import type { Product } from "~/db/schema";
 

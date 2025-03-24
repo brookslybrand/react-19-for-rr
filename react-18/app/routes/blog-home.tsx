@@ -1,6 +1,6 @@
 import { Link } from "react-router";
-import type { Route } from "./+types/blog-home";
 import { getFeaturedPosts } from "~/posts.server";
+import type { Route } from "./+types/blog-home";
 
 export const meta: Route.MetaFunction = () => {
   return [
