@@ -1,33 +1,62 @@
+import clsx from "clsx";
 import { useState } from "react";
 import { href, Link } from "react-router";
 import type { Product } from "~/db/schema";
 
 export function ProductCard({ product }: { product: Product }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const showSecondImage = isHovered && product.images.length > 1;
-
+  const images = product.images.slice(0, 2);
   return (
-    <Link
-      to={href("/products/:id", { id: product.id })}
-      className="block bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-lg transition-shadow"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="block bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-lg transition-shadow group relative">
       <div className="relative aspect-square">
-        <img
-          src={showSecondImage ? product.images[1] : product.images[0]}
-          alt={product.name}
-          className="w-full h-full object-contain rounded-t-lg bg-white dark:bg-gray-800 transition-opacity duration-300"
-        />
+        {images.length === 2 ? (
+          images.map((image, index) => (
+            <Image
+              key={image}
+              src={image}
+              alt={index === 0 ? product.name : undefined}
+              className={
+                index === 0
+                  ? "opacity-100 group-hover:opacity-0"
+                  : "opacity-0 group-hover:opacity-100"
+              }
+            />
+          ))
+        ) : (
+          <Image key={images[0]} src={images[0]} alt={product.name} />
+        )}
       </div>
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {product.name}
+          <Link to={href("/products/:id", { id: product.id })}>
+            <span className="absolute inset-0" />
+            {product.name}
+          </Link>
         </h3>
         <p className="text-gray-600 dark:text-gray-300 mt-2">
           ${product.price.toFixed(2)}
         </p>
       </div>
-    </Link>
+    </div>
+  );
+}
+
+function Image({
+  src,
+  alt,
+  className,
+}: {
+  src: string;
+  alt?: string;
+  className?: string;
+}) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={clsx(
+        "w-full h-full object-contain rounded-t-lg bg-white dark:bg-gray-800 absolute",
+        className,
+      )}
+    />
   );
 }

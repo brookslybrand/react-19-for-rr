@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   href,
   isRouteErrorResponse,
@@ -44,7 +44,6 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 
   return { user, cartTotal, colorScheme };
 }
-
 export function Layout({ children }: { children: React.ReactNode }) {
   const { cartTotal } = useLoaderData<typeof loader>();
   let colorScheme = useColorScheme();
@@ -60,40 +59,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <div className="min-h-screen bg-white dark:bg-gray-900">
-          <nav className="bg-gray-100 dark:bg-gray-800 p-4">
-            <div className="container mx-auto flex justify-between items-center">
-              <div className="flex gap-4">
-                <Link
-                  to={href("/")}
-                  className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
-                >
-                  Home
-                </Link>
-                <Link
-                  to={href("/products")}
-                  className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
-                >
-                  Products
-                </Link>
-                <Link
-                  to={href("/blog")}
-                  className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
-                >
-                  Blog
-                </Link>
-              </div>
-              <div className="flex gap-4 items-center">
-                <Link
-                  to={href("/cart")}
-                  className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
-                >
-                  Cart ({cartTotal})
-                </Link>
-                <ColorSchemePicker />
-              </div>
-            </div>
-          </nav>
-          <main className="container mx-auto px-4 py-8">{children}</main>
+          <Navigation cartTotal={cartTotal} />
+          <main className="container mx-auto px-4 py-8" role="main">
+            {children}
+          </main>
         </div>
         <ScrollRestoration />
         <Scripts />
@@ -123,15 +92,75 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
+    <main
+      className="min-h-[50vh] flex flex-col items-center justify-center p-4 container mx-auto"
+      role="alert"
+    >
+      <div className="text-center max-w-2xl">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          {message}
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+          {details}
+        </p>
+        {stack && (
+          <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto">
+            <pre className="text-sm text-gray-700 dark:text-gray-300">
+              <code>{stack}</code>
+            </pre>
+          </div>
+        )}
+        <Link
+          to={href("/")}
+          className="inline-block mt-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Return Home
+        </Link>
+      </div>
     </main>
+  );
+}
+
+function Navigation({ cartTotal }: { cartTotal: number }) {
+  return (
+    <nav
+      className="bg-gray-100 dark:bg-gray-800 p-4"
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="flex flex-wrap gap-4">
+          <Link
+            to={href("/")}
+            className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1"
+          >
+            Home
+          </Link>
+          <Link
+            to={href("/products")}
+            className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1"
+          >
+            Products
+          </Link>
+          <Link
+            to={href("/blog")}
+            className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1"
+          >
+            Blog
+          </Link>
+        </div>
+        <div className="flex gap-4 items-center">
+          <Link
+            to={href("/cart")}
+            className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1"
+            aria-label={`Cart with ${cartTotal} items`}
+          >
+            Cart ({cartTotal})
+          </Link>
+          <ColorSchemePicker />
+        </div>
+      </div>
+    </nav>
   );
 }
 
@@ -139,6 +168,26 @@ function ColorSchemePicker() {
   const fetcher = useFetcher();
   const { colorScheme } = useLoaderData<typeof loader>();
   const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+      const menu = document.getElementById("color-scheme-menu");
+
+      if (
+        buttonRef.current &&
+        !buttonRef.current.contains(target) &&
+        menu &&
+        !menu.contains(target)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleChange = (value: string) => {
     fetcher.submit(
@@ -149,36 +198,48 @@ function ColorSchemePicker() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" role="menu" aria-label="Color scheme menu">
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+        className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         aria-label="Toggle color scheme"
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        aria-controls="color-scheme-menu"
       >
         {colorScheme === "light" ? "☀️" : colorScheme === "dark" ? "🌙" : "💻"}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
-          <div className="py-1" role="menu">
+        <div
+          id="color-scheme-menu"
+          className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50"
+          role="menu"
+          aria-label="Color scheme options"
+        >
+          <div className="py-1">
             <button
               onClick={() => handleChange("light")}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
-              role="menuitem"
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              role="option"
+              aria-selected={colorScheme === "light"}
             >
               <span>☀️</span> Light
             </button>
             <button
               onClick={() => handleChange("dark")}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
-              role="menuitem"
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              role="option"
+              aria-selected={colorScheme === "dark"}
             >
               <span>🌙</span> Dark
             </button>
             <button
               onClick={() => handleChange("system")}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
-              role="menuitem"
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              role="option"
+              aria-selected={colorScheme === "system"}
             >
               <span>💻</span> System
             </button>
