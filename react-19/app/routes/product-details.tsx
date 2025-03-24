@@ -1,5 +1,6 @@
-import { Suspense, useState } from "react";
-import { Await, useFetcher } from "react-router";
+import { Suspense, use, useState } from "react";
+import { useFetcher } from "react-router";
+import { useHydrated } from "remix-utils/use-hydrated";
 import { getDb } from "~/db/data.server";
 import type { Review } from "~/db/schema";
 import type { Route } from "./+types/product-details";
@@ -30,6 +31,7 @@ export async function loader({ params, context }: Route.LoaderArgs) {
 export default function Product({ loaderData }: Route.ComponentProps) {
   const { product, reviews } = loaderData;
   const fetcher = useFetcher();
+  const isHydrated = useHydrated();
 
   return (
     <div className="space-y-8">
@@ -62,19 +64,22 @@ export default function Product({ loaderData }: Route.ComponentProps) {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           Reviews
         </h2>
-        <Suspense
-          fallback={
-            <div className="animate-pulse space-y-4">
-              <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded-lg" />
-              <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded-lg" />
-              <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded-lg" />
-            </div>
-          }
-        >
-          <Await resolve={reviews}>
-            {(resolvedReviews) => <Reviews reviews={resolvedReviews} />}
-          </Await>
-        </Suspense>
+        {isHydrated ? (
+          // client side navigation shows the pending state
+          <Suspense
+            fallback={
+              <div className="animate-pulse space-y-4">
+                <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+                <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+                <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+              </div>
+            }
+          >
+            <Reviews reviews={reviews} />
+          </Suspense>
+        ) : (
+          <Reviews reviews={reviews} />
+        )}
       </div>
     </div>
   );
@@ -128,14 +133,16 @@ function ImageCarousel({ images }: { images: string[] }) {
   );
 }
 
-function Reviews({ reviews }: { reviews: Review[] }) {
-  if (reviews.length === 0) {
+function Reviews({ reviews }: { reviews: Promise<Review[]> }) {
+  const resolvedReviews = use(reviews);
+
+  if (resolvedReviews.length === 0) {
     return <p className="text-gray-600 dark:text-gray-300">No reviews yet.</p>;
   }
 
   return (
     <div className="space-y-4">
-      {reviews.map((review) => (
+      {resolvedReviews.map((review) => (
         <div
           key={review.id}
           className="bg-white dark:bg-gray-800 p-4 rounded-lg"
