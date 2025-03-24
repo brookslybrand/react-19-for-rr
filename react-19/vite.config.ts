@@ -5,6 +5,7 @@ import rehypePrettyCode from "rehype-pretty-code";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { defineConfig } from "vite";
+import babel from "vite-plugin-babel";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
@@ -18,6 +19,13 @@ export default defineConfig({
       rehypePlugins: [rehypePrettyCode],
     }),
     reactRouter(),
+    babel({
+      filter: /app\/.*\.[jt]sx?$/,
+      babelConfig: {
+        presets: ["@babel/preset-typescript"], // if you use TypeScript
+        plugins: [["babel-plugin-react-compiler"]],
+      },
+    }),
     tsconfigPaths(),
   ],
 });
