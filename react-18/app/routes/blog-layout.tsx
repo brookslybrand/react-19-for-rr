@@ -2,15 +2,32 @@ import { Link, Outlet } from "react-router";
 
 import blogCss from "~/styles/blog.css?url";
 import type { Route } from "./+types/blog-layout";
-import { getPosts } from "~/posts.server";
+import { getPosts, type PostMeta } from "~/posts.server";
 
 export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: blogCss },
 ];
 
-export async function loader({ context }: Route.LoaderArgs) {
+export const meta: Route.MetaFunction = ({ data }) => {
+  // If the data is not present, let the blog home page handle the meta
+  if (!data.frontmatter) {
+    return [];
+  }
+  return [
+    { title: data.frontmatter.title },
+    { name: "description", content: data.frontmatter.description },
+  ];
+};
+
+export async function loader({ request }: Route.LoaderArgs) {
   const posts = await getPosts();
-  return { posts };
+
+  // Get the frontmatter for the current post
+  const url = new URL(request.url);
+  const slug = url.pathname.split("/").pop();
+  const post = posts.find((post) => post.slug === slug);
+
+  return { posts, frontmatter: post?.frontmatter };
 }
 
 export default function BlogLayout({ loaderData }: Route.ComponentProps) {

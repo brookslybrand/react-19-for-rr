@@ -2,6 +2,17 @@ import { Link } from "react-router";
 import type { Route } from "./+types/blog-home";
 import { getFeaturedPosts } from "~/posts.server";
 
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Blog | Remix Store" },
+    {
+      name: "description",
+      content:
+        "Articles about React Router, web development, and modern web architecture",
+    },
+  ];
+};
+
 export async function loader({ context }: Route.LoaderArgs) {
   const posts = await getFeaturedPosts();
   return { posts };

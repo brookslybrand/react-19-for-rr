@@ -2,6 +2,19 @@ import { redirect, useFetcher } from "react-router";
 import { getDb } from "~/db/data.server";
 import type { Route } from "./+types/cart";
 
+export const meta: Route.MetaFunction = ({ data }) => {
+  const numItems = data.cartItems ? data.cartItems.length : 0;
+  return [
+    {
+      title: `Cart ${numItems ? `(${numItems})` : ""} | Remix Store`,
+    },
+    {
+      name: "description",
+      content: "View and manage items in your shopping cart",
+    },
+  ];
+};
+
 export async function action({ request, context }: Route.ActionArgs) {
   const db = getDb(context);
   const formData = await request.formData();

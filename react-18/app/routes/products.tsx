@@ -2,6 +2,16 @@ import { getDb } from "~/db/data.server";
 import { ProductCard } from "~/components/product-card";
 import type { Route } from "./+types/products";
 
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Products | Remix Store" },
+    {
+      name: "description",
+      content: "Browse our complete collection of products",
+    },
+  ];
+};
+
 export async function loader({ context }: Route.LoaderArgs) {
   const db = getDb(context);
   return { products: db.products };

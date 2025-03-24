@@ -4,6 +4,15 @@ import { getDb } from "~/db/data.server";
 import type { Review } from "~/db/schema";
 import type { Route } from "./+types/product-details";
 
+export const meta: Route.MetaFunction = ({ data }) => {
+  if (!data) return [];
+  const { product } = data;
+  return [
+    { title: `${product.name} | Remix Store` },
+    { name: "description", content: product.description },
+  ];
+};
+
 export async function loader({ params, context }: Route.LoaderArgs) {
   const db = getDb(context);
   const product = await db.getProduct(params.id);
