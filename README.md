@@ -212,6 +212,45 @@ This was a very common issue before:
 - Implementation of new metadata patterns in React Router
 - Demo showing removal of `links` and `meta` exports
 
+Previously you had to rely on special React Router exports to add metadata to the document. Now you can use JSX directly in your components:
+
+```tsx
+// Before
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Blog | Remix Store" },
+    {
+      name: "description",
+      content: "Articles about React Router...",
+    },
+  ];
+};
+
+export const links: Route.LinksFunction = () => [
+  { rel: "stylesheet", href: blogCss },
+];
+```
+
+Now you can use JSX directly in your components:
+
+```tsx
+// After
+export default function Blog() {
+  return (
+    <>
+      <title>Blog | Remix Store</title>
+      <meta name="description" content="Articles about React Router..." />
+      <link href={blogCss} rel="stylesheet" />
+      {/* Rest of your component */}
+    </>
+  );
+}
+```
+
+Overall this is much more composable and declarative, and what you write ends up looking much closer to the final HTML. You can also declare metadata in MDX files, which is pretty cool.
+
+Debatable if the links one is better, but it's more composable and nice for 3rd party components that define their own stylesheets.
+
 ### `use` API Example (Product Details & Reviews)
 
 **Before React 19:** Leverages `Async` and `Suspense` to defer loading of reviews section.
