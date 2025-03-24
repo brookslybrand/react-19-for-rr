@@ -34,9 +34,41 @@ This repository contains a fake ecommerce store in two versions (React 18 and Re
 
 Each feature is designed to demonstrate specific React 19 capabilities and how they enhance React Router applications.
 
-## Talk Structure
+## Talk Overview
 
 ### React Compiler
+
+Not really a React 19 feature, and still in beta at the time of this talk. However, it's so simple to drop in and gives you benefits immediate benefits, so why not[^1]?
+
+[React Compiler Docs](https://react.dev/learn/react-compiler)
+
+```shell
+pnpm --filter react-19 add -D vite-plugin-babel babel-plugin-react-compiler@beta
+```
+
+```ts
+// vite.config.ts
+import { reactRouter } from "@react-router/dev/vite";
+import { defineConfig } from "vite";
+import babel from "vite-plugin-babel";
+
+export default defineConfig({
+  plugins: [
+    reactRouter(),
+    babel({
+      filter: /app\/.*\.[jt]sx?$/,
+      babelConfig: {
+        presets: ["@babel/preset-typescript"], // if you use TypeScript
+        plugins: [["babel-plugin-react-compiler"]],
+      },
+    }),
+  ],
+});
+```
+
+Note: You should probably also add `eslint-plugin-react-compiler@beta` to your project as well, but I'm not using linting in this project.
+
+[^1]: Why not is because it's still in beta, so you _may_ encounter some issues, but so far I've heard really good things
 
 ### Custom Elements Example
 
