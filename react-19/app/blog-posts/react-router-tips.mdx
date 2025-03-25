@@ -1,0 +1,37 @@
+---
+title: Essential React Router Tips
+description: Learn the best practices and tips for using React Router effectively
+published: 2024-03-19
+featured: true
+---
+
+<title>(NEW) Essential React Router Tips</title>
+{/* Example of a canonical link, this isn't a real one though */}
+<link
+  rel="canonical"
+  href="https://remix.run/blog/essential-react-router-tips"
+/>
+
+# Essential React Router Tips
+
+React Router is a powerful library for handling routing in React applications. Here are some essential tips to make the most of it.
+
+## Use Data Loading Patterns
+
+```tsx
+// Example of a loader function
+export async function loader({ params }) {
+  const data = await fetchData(params.id);
+  return { data };
+}
+```
+
+## Handle Loading States
+
+Always consider loading states in your routes. React Router provides built-in support for this through the `useNavigation` hook.
+
+## Keep Routes Flat
+
+While nested routes are powerful, keeping your route structure flat when possible makes it easier to maintain and debug.
+
+Stay tuned for more React Router tips and tricks!

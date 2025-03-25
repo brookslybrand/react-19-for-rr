@@ -138,6 +138,7 @@ function Navigation({ cartTotal }: { cartTotal: number }) {
           </Link>
           <Link
             to={href("/products")}
+            prefetch="intent"
             className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1"
           >
             Products
