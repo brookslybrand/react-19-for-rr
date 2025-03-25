@@ -268,10 +268,61 @@ Debatable if the links one is better, but it's more composable and nice for 3rd 
 **After React 19:**
 
 - Implementation of cart functionality using React 19's Actions API
-- Demo of async transitions with `useTransition` for handling pending states
 - Example of form handling with `useActionState` and `<form action={actionFunction}>`
 - Implementation of optimistic UI updates with `useOptimistic` when adding/removing items
-- Showcase of `useFormStatus` for loading states in cart buttons
+
+Honestly, I think fetchers are still a lot easier to work with, but a lot of that is just my familiarity with them.
+
+```tsx
+const fetchers = useFetchers();
+
+// Create a simple lookup of items being removed
+const pendingRemovals = new Set();
+
+fetchers.forEach((fetcher) => {
+  if (fetcher.key?.startsWith("cart-item-") && fetcher.state === "submitting") {
+    pendingRemovals.add(fetcher.key);
+  }
+});
+let optimisticTotal = total;
+for (const item of cartItems) {
+  if (pendingRemovals.has(`cart-item-${item.id}`)) {
+    optimisticTotal -= item.product.price;
+  }
+}
+```
+
+The React 19 way
+
+```tsx
+const submit = useSubmit();
+const [optimisticTotal, setOptimisticTotal] = useOptimistic<number, number>(
+  total,
+  (previousTotal, optimisticTotal) => {
+    return previousTotal + optimisticTotal;
+  },
+);
+
+// ...
+
+<CartItem
+  key={item.id}
+  item={item}
+  action={async () => {
+    setOptimisticTotal(-item.product.price);
+    await submit(
+      { productId: item.productId, intent: "remove" },
+      { method: "post", navigate: false },
+    );
+  }}
+/>;
+
+// ...
+
+const [state, formAction, pending] = useActionState(action, null);
+
+<form action={formAction} />;
+```
 
 ### Honorable Mentions
 
