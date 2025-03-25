@@ -1,4 +1,6 @@
-import { redirect, useFetcher } from "react-router";
+import clsx from "clsx";
+import { useActionState, useOptimistic } from "react";
+import { redirect, useSubmit } from "react-router";
 import { getDb } from "~/db/data.server";
 import type { Route } from "./+types/cart";
 
@@ -49,6 +51,13 @@ export async function loader({ context }: Route.LoaderArgs) {
 
 export default function Cart({ loaderData }: Route.ComponentProps) {
   const { cartItems, total } = loaderData;
+  const submit = useSubmit();
+  const [optimisticTotal, setOptimisticTotal] = useOptimistic<number, number>(
+    total,
+    (previousTotal, optimisticTotal) => {
+      return previousTotal + optimisticTotal;
+    },
+  );
 
   if (cartItems.length === 0) {
     return (
@@ -70,7 +79,17 @@ export default function Cart({ loaderData }: Route.ComponentProps) {
       </h1>
       <ul className="space-y-4">
         {cartItems.map((item) => (
-          <CartItem key={item.id} item={item} />
+          <CartItem
+            key={item.id}
+            item={item}
+            action={async () => {
+              setOptimisticTotal(-item.product.price);
+              await submit(
+                { productId: item.productId, intent: "remove" },
+                { method: "post", navigate: false },
+              );
+            }}
+          />
         ))}
       </ul>
       <div className="mt-8 p-4 bg-white dark:bg-gray-800 rounded-lg">
@@ -79,7 +98,7 @@ export default function Cart({ loaderData }: Route.ComponentProps) {
             Total
           </span>
           <span className="text-2xl font-bold text-gray-900 dark:text-white">
-            ${total.toFixed(2)}
+            ${optimisticTotal.toFixed(2)}
           </span>
         </div>
         <button
@@ -97,15 +116,19 @@ export default function Cart({ loaderData }: Route.ComponentProps) {
 
 type CartItemProps = {
   item: Route.ComponentProps["loaderData"]["cartItems"][number];
+  action: () => void;
 };
 
-function CartItem({ item }: CartItemProps) {
-  const fetcher = useFetcher();
+function CartItem({ item, action }: CartItemProps) {
+  const [state, formAction, pending] = useActionState(action, null);
 
   return (
     <li
       key={item.id}
-      className="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg"
+      className={clsx(
+        "flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg",
+        pending && "opacity-50",
+      )}
     >
       <img
         src={item.product.images[0]}
@@ -123,7 +146,7 @@ function CartItem({ item }: CartItemProps) {
           ${(item.product.price * item.quantity).toFixed(2)}
         </p>
       </div>
-      <fetcher.Form method="post">
+      <form action={formAction}>
         <input type="hidden" name="productId" value={item.productId} />
         <button
           type="submit"
@@ -133,7 +156,7 @@ function CartItem({ item }: CartItemProps) {
         >
           Remove
         </button>
-      </fetcher.Form>
+      </form>
     </li>
   );
 }
